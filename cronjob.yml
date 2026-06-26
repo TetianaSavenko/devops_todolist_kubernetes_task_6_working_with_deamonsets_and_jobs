@@ -7,7 +7,7 @@ metadata:
     app: todoapp-health-checker
 spec:
   schedule: "*/4 * * * *"
-  concurrencyPolicy: Forbid
+  concurrencyPolicy: Allow
   successfulJobsHistoryLimit: 10
   failedJobsHistoryLimit: 5
   jobTemplate:

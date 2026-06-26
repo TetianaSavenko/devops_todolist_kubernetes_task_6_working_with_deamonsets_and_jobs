@@ -1,14 +1,26 @@
-# Deployment and Validation Instructions
+## 2. Deploy the ToDo App Pod and Service
 
-This document provides instructions on how to deploy the DaemonSet and CronJob manifests to the Kubernetes cluster and how to validate that they are working correctly.
+kubectl apply -f todoapp-pod.yaml
 
-## Prerequisites
-* Make sure you have a running Kubernetes cluster.
-* Make sure the `kubectl` CLI tool is installed and configured to communicate with your cluster.
-* Ensure that the ToDo application and its ClusterIP service are already deployed in the cluster.
+## 3. Deploy the DaemonSet and CronJob
 
-## 1. Deployment Steps
+kubectl apply -f daemonset.yml
+kubectl apply -f cronjob.yml
 
-First, ensure that the target namespace `mateapp` exists. If not, create it:
-```bash
-kubectl create namespace mateapp
+## 4. Validation
+
+### Check DaemonSet pods are running:
+kubectl get pods -n mateapp -l app=todoapp-pinger
+
+### Check DaemonSet pod logs:
+kubectl logs -n mateapp -l app=todoapp-pinger
+
+### Check CronJob and its triggered Jobs:
+kubectl get cronjob -n mateapp
+kubectl get jobs -n mateapp
+
+### Check logs of a CronJob-triggered pod:
+kubectl logs -n mateapp -l <label-matching-your-cronjob-pods>
+
+### Verify the health endpoint is reachable from a DaemonSet pod:
+kubectl exec -n mateapp <daemonset-pod-name> -- curl -s http://todoapp/api/health
